@@ -55,8 +55,8 @@ int main()
 
 	SortArrayOfPointsX(array_point, N);
 
-	A = N;
-	for (uint16_t i = N; i > 0; i--) {
+	A = N-1;
+	for (uint16_t i = N-1; i > 0; i--) {
 		if (array_point[A].getx() > array_point[i].getx()) break;
 		else
 		{
