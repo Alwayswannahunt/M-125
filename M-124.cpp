@@ -2,10 +2,10 @@
 #include <iostream>
 
 class point {
-	int32_t x;
-	int32_t y;
-	bool downS; // в какой из оболочек (выше АБ или ниже)
-	bool isInShell;
+	int32_t x = 0;
+	int32_t y = 0;
+	bool downS = false; // в какой из оболочек (выше АБ или ниже)
+	bool isInShell = false;
 public:
 	int32_t getx() {
 		return(x);
@@ -46,6 +46,7 @@ int main()
 	std::cin >> N;
 
 	array_point = new class point[N];
+	if (array_point == NULL) return(1);
 
 	for (uint16_t i = 0; i < N; i++) {
 		std::cin >> A >> B;
@@ -110,7 +111,7 @@ void SortArrayOfPointsY(class point* array_p, uint16_t length) {
 	for (uint16_t j = 1; j < length; j++) {
 		key = array_p[j].gety();
 		i = j - 1;
-		for (i; i >= 0 && array_p[i].getx() > key; i--) {
+		for (i; i >= 0 && array_p[i].gety() > key; i--) {
 			bubble = array_p[i];
 			array_p[i + 1] = array_p[i];
 			array_p[i + 1] = bubble;
