@@ -40,7 +40,8 @@ int32_t FindOrientedAreaOfSubtractionTreePoints(point p1, point p2, point p3);
 int main()
 {
 	uint16_t N=0;
-	int32_t A,B,numSave;
+	int32_t A,B,C,numSave;
+	double areaOfShell;
 	class point* array_point;
 
 	std::cin >> N;
@@ -62,7 +63,7 @@ int main()
 		if (array_point[i].getx() < array_point[B].getx())  break;
 		else
 		{
-			if (array_point[B].gety() > array_point[i].gety()) B = i;
+			if (array_point[B].gety() < array_point[i].gety()) B = i;
 		}
 	}
 	array_point[B].setisInShell(true);
@@ -77,14 +78,15 @@ int main()
 	}
 
 	numSave = 2;
+
 	for (uint16_t i = 1; i < N-1; i++) {
-		if (array_point[A].getx() < array_point[i].getx() && array_point[i].getx() < array_point[i + 1].getx() && array_point[i].getdownS() == true) {
+		if ( (array_point[i].getdownS() == true) && ((array_point[A].getx() < array_point[i].getx() && array_point[i].getx() < array_point[i + 1].getx()) || (array_point[i].getx() == array_point[B].getx()) || (array_point[i].getx() == array_point[0].getx() ))) {
 			for (uint16_t j = i + 1; j < N; j++) {
-				if (FindOrientedAreaOfSubtractionTreePoints(array_point[i], array_point[j], array_point[A]) >= 0 && array_point[j].getx() != array_point[i].getx() && array_point[j].gety() != array_point[i].gety()) break;
+					if (FindOrientedAreaOfSubtractionTreePoints(array_point[i], array_point[j], array_point[A]) >= 0 || (array_point[j].getx() == array_point[i].getx() && array_point[j].gety() == array_point[i].gety())) break;
 				if (j == N - 1) {
-					A = i;
 					array_point[i].setisInShell(true);
 					numSave++;
+					A = i;
 				}
 			}
 		}
@@ -92,18 +94,32 @@ int main()
 	}
 	array_point[B].setdownS(false);
 	A = 0;
-	for (uint16_t i = 1; i < N - 2; i++) {
-		if (array_point[A].getx() < array_point[i].getx() && array_point[i].gety() < array_point[i + 1].gety() && array_point[i].getdownS() == false) {
-			for (uint16_t j = i + 1; j < N - 1; j++) {
-				if (FindOrientedAreaOfSubtractionTreePoints(array_point[i], array_point[j], array_point[A]) <= 0 && array_point[j].getx() != array_point[i].getx() && array_point[j].gety() != array_point[i].gety()) break;
-				if (j == N - 2) {
-					A = i;
+	for (uint16_t i = 1; i < N - 1; i++) {
+		if ( (array_point[i].getdownS() == false) && ((array_point[A].getx() < array_point[i].getx() && array_point[i].gety() < array_point[i + 1].gety()) || (array_point[i].getx() == array_point[B].getx()) || (array_point[i].getx() == array_point[0].getx())) ) {
+			for (uint16_t j = i + 1; j < N; j++) {
+				if (FindOrientedAreaOfSubtractionTreePoints(array_point[i], array_point[j], array_point[A]) <= 0 || (array_point[j].getx() == array_point[i].getx() && array_point[j].gety() == array_point[i].gety())) break;
+				if (j == N - 1) {
 					array_point[i].setisInShell(true);
 					numSave++;
+					A = i;
 				}
 			}
 		}
 
+	}
+
+	areaOfShell = 0;
+	A = 0;
+	C = 0;
+	for (uint16_t i = 0; i < N; i++) {
+		if ((array_point[i].getisInShell() == true) && (array_point[i].getdownS() == true || i == B)) {
+			areaOfShell = areaOfShell - FindOrientedAreaOfSubtractionTreePoints(array_point[A], array_point[i], array_point[0]);
+			A = i;
+		}
+		if ((array_point[i].getisInShell() == true) && (array_point[i].getdownS() == false || i == B)) {
+			areaOfShell = areaOfShell + FindOrientedAreaOfSubtractionTreePoints(array_point[C], array_point[i], array_point[0]);
+			C = i;
+		}
 	}
 
 
@@ -114,6 +130,7 @@ int main()
 	for (int32_t i = N-1; i >= 0; i--) {
 		if (array_point[i].getisInShell() == true && array_point[i].getdownS() == false) std::cout << array_point[i].getx() << ' ' << array_point[i].gety() << '\n';
 	}
+	std::cout << areaOfShell/2 << '\n';
 
 
 	delete[] array_point;
