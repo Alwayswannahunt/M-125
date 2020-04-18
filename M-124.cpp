@@ -35,7 +35,7 @@ public:
 
 void SortArrayOfPointsX(class point* array_p, uint16_t length);
 void SortArrayOfPointsYLeavingXsorting(class point* array_p, uint16_t length);
-int32_t FindOrientedAreaOfSubtractionTreePoints(point p1, point p2, point p3);
+int64_t FindOrientedAreaOfSubtractionTreePoints(point p1, point p2, point p3);
 
 int main()
 {
@@ -130,7 +130,9 @@ int main()
 	for (int32_t i = N-1; i >= 0; i--) {
 		if (array_point[i].getisInShell() == true && array_point[i].getdownS() == false) std::cout << array_point[i].getx() << ' ' << array_point[i].gety() << '\n';
 	}
-	std::cout << areaOfShell/2 << '\n';
+	std::cout << std::fixed;
+	std::cout.precision(1);
+	std::cout <<  areaOfShell/2 << '\n';
 
 
 	delete[] array_point;
@@ -170,6 +172,6 @@ void SortArrayOfPointsYLeavingXsorting(class point* array_p, uint16_t length) {
 }
 
 
-int32_t FindOrientedAreaOfSubtractionTreePoints(point p1, point p2, point p3) {
-	return(((p1.getx() - p3.getx()) * (p2.gety() - p3.gety()))  - ((p2.getx() - p3.getx()) * (p1.gety() - p3.gety()))); // {p1-p3} X {p2-p3}
+int64_t FindOrientedAreaOfSubtractionTreePoints(point p1, point p2, point p3) {
+	return((((int64_t)p1.getx() - (int64_t)p3.getx()) * ((int64_t)p2.gety() - (int64_t)p3.gety()))  - (((int64_t)p2.getx() - (int64_t)p3.getx()) * ((int64_t)p1.gety() - (int64_t)p3.gety()))); // {p1-p3} X {p2-p3}
 }
